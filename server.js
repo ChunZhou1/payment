@@ -26,16 +26,21 @@ app.post("/create-payment-intent", async (req, res) => {
 
   var paymentMethodsId = "";
 
+  var paymentMethods1;
+
   if (customerId != "") {
     //get paymentmethod id for client use
-    var paymentMethods1 = await stripe.paymentMethods.list({
+    paymentMethods1 = await stripe.paymentMethods.list({
       customer: customerId,
       type: "card"
     });
 
-    console.log(paymentMethods1);
-
     paymentMethodsId = paymentMethods1.data[0].id;
+
+    var last4 = paymentMethods1.data[0].card.last4;
+
+    //important ,can be used to pass to front end
+    console.log(last4);
 
     paymentIntentData.customer = customerId;
     paymentIntentData.payment_method = paymentMethodsId;
